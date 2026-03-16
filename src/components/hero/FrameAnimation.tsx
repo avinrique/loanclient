@@ -1,60 +1,83 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useCallback } from "react";
 
-const TOTAL_FRAMES = 20;
-const FRAME_RATE = 100; // ms per frame (~10fps)
+const TOTAL_FRAMES = 80;
+
+function getFrameSrc(index: number) {
+  return `/frames/frame-${String(index).padStart(3, "0")}.jpg`;
+}
 
 export default function FrameAnimation() {
-  const [currentFrame, setCurrentFrame] = useState(1);
-  const [loaded, setLoaded] = useState(false);
-  const loadedCount = useRef(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const currentFrameRef = useRef(0);
+  const rafRef = useRef<number>(0);
 
-  // Preload all frames
-  useEffect(() => {
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      const img = new window.Image();
-      img.src = `/frames/frame-${String(i).padStart(2, "0")}.jpg`;
-      img.onload = () => {
-        loadedCount.current++;
-        if (loadedCount.current >= TOTAL_FRAMES) setLoaded(true);
-      };
-    }
+  const drawFrame = useCallback((frameIndex: number) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    const img = imagesRef.current[frameIndex];
+    if (!canvas || !ctx || !img || !img.complete) return;
+
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    ctx.drawImage(img, 0, 0);
   }, []);
 
-  // Animate frames
   useEffect(() => {
-    if (!loaded) return;
-    const interval = setInterval(() => {
-      setCurrentFrame((prev) => (prev >= TOTAL_FRAMES ? 1 : prev + 1));
-    }, FRAME_RATE);
-    return () => clearInterval(interval);
-  }, [loaded]);
+    // Preload all frames
+    const images: HTMLImageElement[] = [];
+    let loadedCount = 0;
+
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = getFrameSrc(i);
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === 1) drawFrame(0); // show first frame immediately
+      };
+      images.push(img);
+    }
+    imagesRef.current = images;
+
+    // Scroll handler - maps scroll within the hero wrapper to frame index
+    const handleScroll = () => {
+      rafRef.current = requestAnimationFrame(() => {
+        const wrapper = document.getElementById("hero-scroll-wrapper");
+        if (!wrapper) return;
+
+        const rect = wrapper.getBoundingClientRect();
+        const wrapperHeight = wrapper.offsetHeight - window.innerHeight;
+        // How far we've scrolled into the wrapper (0 to 1)
+        const scrollProgress = Math.min(
+          Math.max(-rect.top / wrapperHeight, 0),
+          1
+        );
+        const frameIndex = Math.min(
+          Math.floor(scrollProgress * TOTAL_FRAMES),
+          TOTAL_FRAMES - 1
+        );
+
+        if (frameIndex !== currentFrameRef.current) {
+          currentFrameRef.current = frameIndex;
+          drawFrame(frameIndex);
+        }
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [drawFrame]);
 
   return (
-    <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
-      {/* Show first frame as placeholder while loading */}
-      {Array.from({ length: TOTAL_FRAMES }, (_, i) => i + 1).map((frame) => (
-        <Image
-          key={frame}
-          src={`/frames/frame-${String(frame).padStart(2, "0")}.jpg`}
-          alt="Loan facilitation animation"
-          fill
-          className={`object-cover transition-opacity duration-75 ${
-            frame === currentFrame ? "opacity-100" : "opacity-0"
-          }`}
-          priority={frame <= 3}
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-      ))}
-
-      {/* Loading overlay */}
-      {!loaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-primary-900/30 backdrop-blur-sm">
-          <div className="w-8 h-8 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-        </div>
-      )}
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="w-full h-full object-contain rounded-2xl"
+      style={{ aspectRatio: "16/9" }}
+    />
   );
 }

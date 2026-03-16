@@ -11,7 +11,7 @@ function getFrameSrc(index: number) {
 export default function FrameAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const currentFrameRef = useRef(0);
+  const currentFrameRef = useRef(-1);
   const rafRef = useRef<number>(0);
 
   const drawFrame = useCallback((frameIndex: number) => {
@@ -20,8 +20,12 @@ export default function FrameAnimation() {
     const img = imagesRef.current[frameIndex];
     if (!canvas || !ctx || !img || !img.complete) return;
 
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
+    // Set canvas size to match image (only once)
+    if (canvas.width !== img.naturalWidth) {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
   }, []);
 
@@ -35,27 +39,29 @@ export default function FrameAnimation() {
       img.src = getFrameSrc(i);
       img.onload = () => {
         loadedCount++;
-        if (loadedCount === 1) drawFrame(0); // show first frame immediately
+        // Draw first frame as soon as it's loaded
+        if (i === 1 && currentFrameRef.current === -1) {
+          currentFrameRef.current = 0;
+          drawFrame(0);
+        }
       };
       images.push(img);
     }
     imagesRef.current = images;
 
-    // Scroll handler - maps scroll within the hero wrapper to frame index
     const handleScroll = () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
         const wrapper = document.getElementById("hero-scroll-wrapper");
         if (!wrapper) return;
 
         const rect = wrapper.getBoundingClientRect();
-        const wrapperHeight = wrapper.offsetHeight - window.innerHeight;
-        // How far we've scrolled into the wrapper (0 to 1)
-        const scrollProgress = Math.min(
-          Math.max(-rect.top / wrapperHeight, 0),
-          1
-        );
+        const scrollableHeight = wrapper.offsetHeight - window.innerHeight;
+        if (scrollableHeight <= 0) return;
+
+        const progress = Math.min(Math.max(-rect.top / scrollableHeight, 0), 1);
         const frameIndex = Math.min(
-          Math.floor(scrollProgress * TOTAL_FRAMES),
+          Math.floor(progress * TOTAL_FRAMES),
           TOTAL_FRAMES - 1
         );
 
@@ -67,6 +73,8 @@ export default function FrameAnimation() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial draw
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(rafRef.current);
@@ -76,7 +84,7 @@ export default function FrameAnimation() {
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-full object-contain rounded-2xl"
+      className="w-full h-auto block"
       style={{ aspectRatio: "16/9" }}
     />
   );

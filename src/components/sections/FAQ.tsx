@@ -10,13 +10,12 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <SectionWrapper id="faq" className="mesh-bg-2">
+    <SectionWrapper id="faq" className="bg-white">
       <SectionHeading
-        title="Frequently Asked Questions"
-        subtitle="Got questions? We've got answers."
+        title="FAQ"
+        subtitle="Common questions answered"
       />
-
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         {FAQS.map((faq, i) => (
           <AccordionItem
             key={i}

@@ -20,13 +20,13 @@ export default function Button({
       className={clsx(
         "inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap",
         {
-          "bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 active:scale-[0.97]":
+          "bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-600/20 active:scale-[0.97]":
             variant === "primary",
-          "border border-neutral-300 text-neutral-700 hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50 active:scale-[0.97]":
+          "border border-gray-200 text-gray-600 bg-white hover:border-gray-300 hover:text-gray-900 active:scale-[0.97]":
             variant === "outline",
-          "px-5 py-2 text-sm": size === "sm",
-          "px-6 py-2.5 text-[15px]": size === "md",
-          "px-8 py-3 text-base": size === "lg",
+          "px-4 py-1.5 text-[13px]": size === "sm",
+          "px-5 py-2 text-sm": size === "md",
+          "px-7 py-2.5 text-[15px]": size === "lg",
         },
         className
       )}

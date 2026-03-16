@@ -21,7 +21,7 @@ export default function AnimatedCard({
       viewport={{ once: true, amount: 0.15 }}
       custom={index}
       className={clsx(
-        "relative bg-white rounded-2xl shadow-lg shadow-neutral-200/50 p-7 transition-all duration-300 hover:shadow-xl hover:shadow-primary-100/50 hover:-translate-y-2 glow-border overflow-hidden",
+        "bg-white rounded-2xl border border-gray-100 p-6 transition-all duration-300 hover:shadow-lg hover:shadow-gray-100/80 hover:-translate-y-1",
         className
       )}
     >

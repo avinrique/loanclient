@@ -14,25 +14,12 @@ export default function SectionHeading({
   const { ref, inView } = useInView();
 
   return (
-    <div ref={ref} className="text-center mb-16">
-      <motion.div
-        variants={fadeInUp}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        className="inline-flex items-center gap-3 mb-4"
-      >
-        <span className="h-[2px] w-8 bg-gradient-to-r from-transparent to-primary-400" />
-        <span className="text-sm font-semibold text-primary-500 uppercase tracking-wider">
-          {title}
-        </span>
-        <span className="h-[2px] w-8 bg-gradient-to-l from-transparent to-primary-400" />
-      </motion.div>
+    <div ref={ref} className="text-center mb-14">
       <motion.h2
         variants={fadeInUp}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
-        custom={1}
-        className="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 font-[var(--font-heading)]"
+        className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight font-[var(--font-heading)]"
       >
         {title}
       </motion.h2>
@@ -41,8 +28,8 @@ export default function SectionHeading({
           variants={fadeInUp}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          custom={2}
-          className="mt-5 text-lg text-neutral-500 max-w-2xl mx-auto leading-relaxed"
+          custom={1}
+          className="mt-3 text-base text-gray-500 max-w-xl mx-auto"
         >
           {subtitle}
         </motion.p>

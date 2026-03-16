@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Shield, TrendingUp, Users } from "lucide-react";
 import Button from "@/components/ui/Button";
-import HeroAnimation from "@/components/hero/HeroAnimation";
+import FrameAnimation from "@/components/hero/FrameAnimation";
 
 function FloatingParticle({ className }: { className: string }) {
   return (
@@ -26,7 +26,6 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(14,165,233,0.25),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,rgba(34,211,238,0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_90%_10%,rgba(8,145,178,0.2),transparent_40%)]" />
-        {/* Grid pattern overlay */}
         <div className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
@@ -103,17 +102,16 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Right: Animation */}
+          {/* Right: Frame Animation */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="relative"
           >
-            {/* Glow behind animation */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-accent-500/20 rounded-3xl blur-3xl" />
-            <div className="relative glass rounded-3xl p-6 sm:p-8">
-              <HeroAnimation />
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/30 ring-1 ring-white/10">
+              <FrameAnimation />
             </div>
           </motion.div>
         </div>

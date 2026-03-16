@@ -18,15 +18,15 @@ export default function Button({
   return (
     <button
       className={clsx(
-        "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 cursor-pointer",
+        "inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap",
         {
-          "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-[0.98]":
+          "bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 active:scale-[0.97]":
             variant === "primary",
-          "border-2 border-primary-500 text-primary-600 hover:bg-primary-50 hover:border-primary-600 hover:scale-[1.02] active:scale-[0.98]":
+          "border border-neutral-300 text-neutral-700 hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50 active:scale-[0.97]":
             variant === "outline",
-          "px-5 py-2.5 text-sm": size === "sm",
-          "px-7 py-3.5 text-base": size === "md",
-          "px-9 py-4 text-lg": size === "lg",
+          "px-5 py-2 text-sm": size === "sm",
+          "px-6 py-2.5 text-[15px]": size === "md",
+          "px-8 py-3 text-base": size === "lg",
         },
         className
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 import AnimatedCard from "./AnimatedCard";
 
 export default function TestimonialCard({
@@ -19,6 +19,7 @@ export default function TestimonialCard({
   return (
     <AnimatedCard index={index} className="flex flex-col justify-between">
       <div>
+        <Quote className="h-8 w-8 text-primary-200 mb-4" />
         <div className="flex gap-1 mb-4">
           {Array.from({ length: rating }).map((_, i) => (
             <Star
@@ -27,13 +28,18 @@ export default function TestimonialCard({
             />
           ))}
         </div>
-        <p className="text-neutral-600 italic leading-relaxed mb-6">
+        <p className="text-neutral-600 leading-relaxed mb-6 text-[15px]">
           &ldquo;{quote}&rdquo;
         </p>
       </div>
-      <div>
-        <p className="font-semibold text-neutral-800">{name}</p>
-        <p className="text-sm text-primary-500">{loanType}</p>
+      <div className="flex items-center gap-3 pt-4 border-t border-neutral-100">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white font-bold text-sm">
+          {name.charAt(0)}
+        </div>
+        <div>
+          <p className="font-semibold text-neutral-800">{name}</p>
+          <p className="text-sm text-primary-500">{loanType}</p>
+        </div>
       </div>
     </AnimatedCard>
   );

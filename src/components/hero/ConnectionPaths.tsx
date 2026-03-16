@@ -7,16 +7,40 @@ const pathVariant = {
   visible: {
     pathLength: 1,
     opacity: 1,
-    transition: { duration: 1.2, delay: 1, ease: "easeInOut" as const },
+    transition: { duration: 1.5, delay: 1, ease: "easeInOut" as const },
   },
 };
 
 export default function ConnectionPaths() {
   return (
     <g>
-      {/* Left path: People → Company */}
+      {/* Glow path behind (thicker, blurred) */}
       <motion.path
-        d="M170 160 C260 160 280 170 360 165"
+        d="M175 170 C260 170 290 175 360 170"
+        fill="none"
+        stroke="#0EA5E9"
+        strokeWidth="6"
+        opacity="0.15"
+        variants={pathVariant}
+        initial="hidden"
+        animate="visible"
+        filter="url(#glow)"
+      />
+      <motion.path
+        d="M440 170 C510 165 540 170 645 165"
+        fill="none"
+        stroke="#0EA5E9"
+        strokeWidth="6"
+        opacity="0.15"
+        variants={pathVariant}
+        initial="hidden"
+        animate="visible"
+        filter="url(#glow)"
+      />
+
+      {/* Main dotted paths */}
+      <motion.path
+        d="M175 170 C260 170 290 175 360 170"
         fill="none"
         stroke="url(#pathGrad)"
         strokeWidth="2.5"
@@ -25,13 +49,28 @@ export default function ConnectionPaths() {
         initial="hidden"
         animate="visible"
       />
-      {/* Right path: Company → Lenders */}
       <motion.path
-        d="M440 165 C520 160 540 160 640 155"
+        d="M440 170 C510 165 540 170 645 165"
         fill="none"
         stroke="url(#pathGrad)"
         strokeWidth="2.5"
         strokeDasharray="8 4"
+        variants={pathVariant}
+        initial="hidden"
+        animate="visible"
+      />
+
+      {/* Arrow tips */}
+      <motion.polygon
+        points="355,164 365,170 355,176"
+        fill="#22D3EE"
+        variants={pathVariant}
+        initial="hidden"
+        animate="visible"
+      />
+      <motion.polygon
+        points="640,159 650,165 640,171"
+        fill="#22D3EE"
         variants={pathVariant}
         initial="hidden"
         animate="visible"

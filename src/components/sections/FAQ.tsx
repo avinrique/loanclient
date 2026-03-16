@@ -10,7 +10,7 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <SectionWrapper id="faq" className="bg-white">
+    <SectionWrapper id="faq" className="mesh-bg-2">
       <SectionHeading
         title="Frequently Asked Questions"
         subtitle="Got questions? We've got answers."
